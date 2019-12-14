@@ -1,0 +1,17 @@
+{
+  "name": "rlcs-calendar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "jsdom": "^15.2.1",
+    "vm2": "^3.8.4"
+  }
+}

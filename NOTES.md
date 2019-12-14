@@ -1,0 +1,1 @@
+https://www.rocketleagueesports.com/ajax/matches-script/?league=7-57d5ab4-qm0qcw&season=7-e8fcccb7dd-7h0w65&region=0&stage=7-aafeeaf198-prnslp
