@@ -1,28 +1,58 @@
-const { JSDOM } = require('jsdom');
-const axios = require('axios');
-const { VM } = require('vm2');
+const Koa = require('koa');
+const KoaRouter = require('koa-router');
+const koaViews = require('koa-views');
+const koaStatic = require('koa-static');
+const moment = require('moment-timezone');
+
+const { getMatches } = require('./infrastructure/rlesports');
 
 async function main() {
-    const response = await axios.get('https://www.rocketleagueesports.com/ajax/matches-script/?league=7-57d5ab4-qm0qcw&season=7-e8fcccb7dd-7h0w65&region=0&stage=7-aafeeaf198-prnslp');
-    const dom = new JSDOM(response.data);
-    const jsContent = dom.window.document.querySelector('script').textContent;
-    let data = null;
-    const vm = new VM({
-        sandbox: {
-            callback: (d) => data = d,
-        }
-    });
-    vm.run(`var $ = () => {};\n${jsContent};\callback(matches);`);
-    console.log(data.map(parseMatch));
-}
+    const app = new Koa();
+    const router = new KoaRouter();
 
-function parseMatch(match) {
-    return {
-        name: `${match.ta_name} vs ${match.tb_name}`
-    }
+    router.get('/', async (ctx, next) => {
+
+        const today = moment().toDate();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+        today.setMilliseconds(0);
+        
+        const tomorrow = moment().add(1, 'day').toDate();
+        tomorrow.setHours(0);
+        tomorrow.setMinutes(0);
+        tomorrow.setSeconds(0);
+        tomorrow.setMilliseconds(0);
+
+        const matches = (await getMatches())
+            .filter(m => m.utcTimestamp > today.getTime() && m.utcTimestamp < tomorrow.getTime())
+            .map(m => {
+                return {
+                    title: `${m.teams.a.name} vs ${m.teams.b.name}`,
+                    a_image_style: `background-image: url(${m.teams.a.logo})`,
+                    b_image_style: `background-image: url(${m.teams.b.logo})`,
+                    when: moment.utc(m.utcTimestamp).clone().tz('Europe/Madrid').format('HH:mm')
+                };
+            });
+
+        await ctx.render('index', { matches });
+    });
+
+    app.use(koaViews(__dirname + '/views', {
+        extension: 'pug',
+        map: {
+            pug: 'pug'
+        }
+    }));
+
+    app.use(router.routes());
+    app.use(router.allowedMethods());
+    app.use(koaStatic(__dirname + '/static'));
+
+    app.listen(process.env.PORT || 80, '0.0.0.0');
 }
 
 main().then(
-    () => {},
+    () => { },
     (err) => console.log(err)
 );

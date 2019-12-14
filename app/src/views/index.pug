@@ -1,0 +1,18 @@
+html
+    head
+        title RLCS Calendar
+        meta(name="viewport", content="width=device-width, user-scalable=no")
+        link(rel="stylesheet", href="style.css")
+    body
+
+        div.content
+            h1 RLCS Calendar
+
+            div.matches
+                each match in matches
+                    
+                    div.match
+                        span.match-when= match.when
+                        div.match-team-logo(style=match.a_image_style)
+                        span.match-title= match.title
+                        div.match-team-logo(style=match.b_image_style)
