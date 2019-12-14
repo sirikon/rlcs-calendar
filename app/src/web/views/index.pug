@@ -11,8 +11,21 @@ html
             div.matches
                 each match in matches
                     
-                    div.match
-                        span.match-when= match.when
-                        div.match-team-logo(style=match.a_image_style)
-                        span.match-title= match.title
-                        div.match-team-logo(style=match.b_image_style)
+                    div.match(
+                        data-left-outcome=match.info.result.a.outcome,
+                        data-right-outcome=match.info.result.b.outcome)
+
+                        div.team.is-left(data-outcome=match.info.result.a.outcome)
+                            div.team-logo(style=match.a_image_style)
+                            div.team-info
+                                span.team-name= match.info.teams.a.name
+
+                        div.match-info
+                            span.match-when= match.when
+                            div.match-score(style=match.score_style)
+                                span #{match.info.result.a.wins}-#{match.info.result.b.wins}
+
+                        div.team.is-right(data-outcome=match.info.result.b.outcome)
+                            div.team-logo(style=match.b_image_style)
+                            div.team-info
+                                span.team-name= match.info.teams.b.name

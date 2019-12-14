@@ -1,4 +1,4 @@
-const { Worker, isMainThread } = require('worker_threads');
+const { Worker } = require('worker_threads');
 const pathUtils = require('path');
 
 const jobs = {

@@ -57,11 +57,11 @@ function parseMatch(match) {
         result: {
             a: {
                 wins: match.ta_wins,
-                outcome: match.ta_outcome
+                outcome: match.ta_outcome || (match.tb_outcome === 'loss' ? 'win' : '')
             },
             b: {
                 wins: match.tb_wins,
-                outcome: match.tb_outcome
+                outcome: match.tb_outcome || (match.ta_outcome === 'loss' ? 'win' : '')
             }
         },
 

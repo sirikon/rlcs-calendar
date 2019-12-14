@@ -12,13 +12,16 @@ function webApp() {
 
     router.get('/', async (ctx, next) => {
 
-        const today = moment().toDate();
+        const from = parseInt(ctx.request.query.from || '0');
+        const to = parseInt(ctx.request.query.to || '1');
+
+        const today = moment().add(from, 'day').toDate();
         today.setHours(0);
         today.setMinutes(0);
         today.setSeconds(0);
         today.setMilliseconds(0);
 
-        const tomorrow = moment().add(1, 'day').toDate();
+        const tomorrow = moment().add(to, 'day').toDate();
         tomorrow.setHours(0);
         tomorrow.setMinutes(0);
         tomorrow.setSeconds(0);
@@ -28,9 +31,10 @@ function webApp() {
             .filter(m => m.utcTimestamp > today.getTime() && m.utcTimestamp < tomorrow.getTime())
             .map(m => {
                 return {
-                    title: `${m.teams.a.name} vs ${m.teams.b.name}`,
+                    info: m,
                     a_image_style: `background-image: url(${m.teams.a.logo})`,
                     b_image_style: `background-image: url(${m.teams.b.logo})`,
+                    score_style: `display: ${(m.result.a.outcome || m.result.b.outcome ? 'block' : 'none')};`,
                     when: moment.utc(m.utcTimestamp).clone().tz('Europe/Madrid').format('HH:mm')
                 };
             });

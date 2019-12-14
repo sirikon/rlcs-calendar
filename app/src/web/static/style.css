@@ -15,18 +15,62 @@ body {
 .match {
     background-color: #363636;
     margin-bottom: 10px;
-    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
 }
 
-.match-when {
-    margin: 0 5px 0 10px;
+.match[data-left-outcome='win'] {
+    background:#363636 linear-gradient(90deg, #00ff0024 0%, transparent 50%);
 }
 
-.match-title {
-    font-weight: bold;
+.match[data-right-outcome='win'] {
+    background:#363636 linear-gradient(-90deg, #00ff0024 0%, transparent 50%);
 }
 
-.match-team-logo {
+@media (max-width: 370px) {
+    .match {
+        padding: 5px 0;
+    }
+}
+
+.team {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 1px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.team.is-right {
+    flex-direction: row-reverse;
+    text-align: right;
+}
+
+.team[data-outcome='loss'] {
+    opacity: 0.7;
+}
+
+@media (max-width: 370px) {
+    .team,
+    .team.is-right {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+.match-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 15px;
+}
+
+.team-logo {
+    flex-grow: 0;
+    flex-shrink: 0;
     vertical-align: middle;
     height: 3em;
     width: 3em;
