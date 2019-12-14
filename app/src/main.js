@@ -17,7 +17,7 @@ async function main() {
         today.setMinutes(0);
         today.setSeconds(0);
         today.setMilliseconds(0);
-        
+
         const tomorrow = moment().add(1, 'day').toDate();
         tomorrow.setHours(0);
         tomorrow.setMinutes(0);
@@ -56,3 +56,8 @@ main().then(
     () => { },
     (err) => console.log(err)
 );
+
+process.on('SIGTERM', () => {
+    console.log('SIGTERM detected. Shutting down.');
+    process.exit();
+});

@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+
+  web:
+    image: rlcs-calendar
+    restart: always
+    build:
+      context: ../app
