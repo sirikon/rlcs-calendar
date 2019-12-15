@@ -2,6 +2,8 @@ const { JSDOM } = require('jsdom');
 const axios = require('axios');
 const { VM } = require('vm2');
 
+const { measure } = require('../services/measureTime');
+
 const MATCHES_SCRIPT_URL = 'https://www.rocketleagueesports.com/ajax/matches-script/';
 
 async function getMatches() {
@@ -10,18 +12,27 @@ async function getMatches() {
 }
 
 async function fetchRawMatchesFromWeb() {
-    const response = await axios.get(MATCHES_SCRIPT_URL);
-    const dom = new JSDOM(response.data);
-    const jsContent = dom.window.document.querySelector('script').textContent;
-    let data = null;
-    const vm = new VM({
-        sandbox: {
-            callback: (d) => data = d,
-        }
-    });
-    vm.run(`var $ = () => {};\n${jsContent};\callback(matches);`);
-    return data;
+    const response = await fetchMatchesScript();
+    return await evaluateScript(response.data);
 }
+
+const evaluateScript = async (data) => 
+    await measure('Evaluate script', async () => {
+        const dom = new JSDOM(data);
+        const jsContent = dom.window.document.querySelector('script').textContent;
+        let matches = null;
+        const vm = new VM({
+            sandbox: {
+                callback: (d) => matches = d,
+            }
+        });
+        vm.run(`var $ = () => {};\n${jsContent};\callback(matches);`);
+        return matches;
+    });
+
+const fetchMatchesScript = async () =>
+    await measure('Fetch matches script', async () =>
+        await axios.get(MATCHES_SCRIPT_URL));
 
 function parseMatch(match) {
     const dateParts = match.pdt_date.split(' ');

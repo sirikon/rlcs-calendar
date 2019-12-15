@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/main.js",
   "scripts": {
-    "start": "mkdir -p ./data && PORT=3000 node src/main.js",
+    "start": "mkdir -p ./data && mkdir -p ./logs && PORT=3000 node src/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -18,6 +18,8 @@
     "koa-views": "^6.2.1",
     "moment-timezone": "^0.5.27",
     "pug": "^2.0.4",
-    "vm2": "^3.8.4"
+    "uuid": "^3.3.3",
+    "vm2": "^3.8.4",
+    "winston": "^3.2.1"
   }
 }
